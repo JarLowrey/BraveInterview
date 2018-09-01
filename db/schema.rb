@@ -10,19 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_01_195838) do
+ActiveRecord::Schema.define(version: 2018_09_01_213147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "films", force: :cascade do |t|
+  create_table "film_characters", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.bigint "film_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["film_id"], name: "index_film_characters_on_film_id"
+    t.index ["person_id"], name: "index_film_characters_on_person_id"
+  end
+
+  create_table "films", force: :cascade do |t|
+    t.string "title"
+    t.integer "episode_id"
+    t.string "opening_crawl"
+    t.string "director"
+    t.string "producer"
+    t.datetime "release_date"
+    t.string "species"
+    t.string "starships"
+    t.string "vehicles"
+    t.string "planets"
+    t.integer "swapi_id"
+    t.datetime "created"
+    t.datetime "edited"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_films_on_title"
   end
 
   create_table "people", force: :cascade do |t|
+    t.string "name"
+    t.string "birth_year"
+    t.string "homeworld"
+    t.string "species"
+    t.string "starships"
+    t.string "vehicles"
+    t.string "eye_color"
+    t.string "hair_color"
+    t.string "skin_color"
+    t.integer "height"
+    t.integer "mass"
+    t.integer "gender"
+    t.integer "swapi_id"
+    t.datetime "created"
+    t.datetime "edited"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_people_on_name"
   end
 
 end
