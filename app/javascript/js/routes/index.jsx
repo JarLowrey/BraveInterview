@@ -41,11 +41,11 @@ export default class Index extends Component {
               onChange={this.handleTypeChange}
               input={<Input name="resource-search-type" id="resource-search-type--id" />}
             >
-              <MenuItem value={10}>People</MenuItem>
-              <MenuItem value={20}>Films</MenuItem>
-              <MenuItem value={30}>Starships</MenuItem>
-              <MenuItem value={40}>Species</MenuItem>
-              <MenuItem value={50}>Planets</MenuItem>
+              <MenuItem value="people">People</MenuItem>
+              <MenuItem value="films">Films</MenuItem>
+              <MenuItem value="starships">Starships</MenuItem>
+              <MenuItem value="species">Species</MenuItem>
+              <MenuItem value="planets">Planets</MenuItem>
             </Select>
           </FormControl>
 

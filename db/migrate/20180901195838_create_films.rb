@@ -8,7 +8,7 @@ class CreateFilms < ActiveRecord::Migration[5.2]
 
       t.string :director
       t.string :producer
-      t.datetime :release_date
+      t.date :release_date
 
       #other tables film is related to, but not creating migrations for
       t.string :species
@@ -16,9 +16,9 @@ class CreateFilms < ActiveRecord::Migration[5.2]
       t.string :vehicles
       t.string :planets
 
-      t.integer :swapi_id #extracted from their URL property
-      t.datetime :created
-      t.datetime :edited
+      t.string :url
+      t.string :created
+      t.string :edited
 
       t.timestamps
     end

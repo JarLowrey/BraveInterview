@@ -4,6 +4,12 @@ class CreatePeople < ActiveRecord::Migration[5.2]
       t.string :name, index: true #is a search field
 
       t.string :birth_year
+      t.string :eye_color
+      t.string :gender
+      t.string :hair_color
+      t.string :height
+      t.string :mass
+      t.string :skin_color
       t.string :homeworld
 
       #other tables person is related to, but not creating migrations for
@@ -11,18 +17,9 @@ class CreatePeople < ActiveRecord::Migration[5.2]
       t.string :starships
       t.string :vehicles
 
-      t.string :eye_color
-      t.string :hair_color
-      t.string :skin_color
-
-      t.integer :height
-      t.integer :mass
-
-      t.integer :gender
-
-      t.integer :swapi_id #extracted from their URL property
-      t.datetime :created
-      t.datetime :edited
+      t.string :url
+      t.string :created
+      t.string :edited
       
       t.timestamps
     end
