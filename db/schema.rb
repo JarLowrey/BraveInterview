@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2018_09_01_213147) do
 
   create_table "films", force: :cascade do |t|
     t.string "title"
+    t.integer "swapi_id"
     t.integer "episode_id"
     t.string "opening_crawl"
     t.string "director"
@@ -40,11 +41,13 @@ ActiveRecord::Schema.define(version: 2018_09_01_213147) do
     t.string "edited"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["swapi_id"], name: "index_films_on_swapi_id"
     t.index ["title"], name: "index_films_on_title"
   end
 
   create_table "people", force: :cascade do |t|
     t.string "name"
+    t.integer "swapi_id"
     t.string "birth_year"
     t.string "eye_color"
     t.string "gender"
@@ -62,6 +65,7 @@ ActiveRecord::Schema.define(version: 2018_09_01_213147) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_people_on_name"
+    t.index ["swapi_id"], name: "index_people_on_swapi_id"
   end
 
 end

@@ -13,10 +13,11 @@ export default class Index extends Component {
     super(props);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleTypeChange = this.handleTypeChange.bind(this);
+    this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
 
     this.state = {
-      search: "",
-      type: 10
+      search: "Luke Sywalker",
+      type: "people"
     }
   }
 
@@ -26,39 +27,45 @@ export default class Index extends Component {
   handleTypeChange(event) {
     this.setState({ type: event.target.value });
   }
+  handleSearchFormSubmit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log(event); 
+  }
 
   render() {
     return (
-        <form noValidate autoComplete="off">
+      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit}>
         <span>Search </span>
-          <FormControl
-          style={{verticalAlign:'bottom'}}
-            margin="normal">
-            <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
-            <Select
-              value={this.state.type}
-              style={{ minWidth: '150px' }}
-              onChange={this.handleTypeChange}
-              input={<Input name="resource-search-type" id="resource-search-type--id" />}
-            >
-              <MenuItem value="people">People</MenuItem>
-              <MenuItem value="films">Films</MenuItem>
-              <MenuItem value="starships">Starships</MenuItem>
-              <MenuItem value="species">Species</MenuItem>
-              <MenuItem value="planets">Planets</MenuItem>
-            </Select>
-          </FormControl>
+        <FormControl
+          style={{ verticalAlign: 'bottom' }}
+          margin="normal">
+          <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
+          <Select
+            value={this.state.type}
+            style={{ minWidth: '150px' }}
+            onChange={this.handleTypeChange}
+            input={<Input name="resource-search-type" id="resource-search-type--id" />}
+          >
+            <MenuItem value="people">People</MenuItem>
+            <MenuItem value="films">Films</MenuItem>
+            <MenuItem value="starships">Starships</MenuItem>
+            <MenuItem value="species">Species</MenuItem>
+            <MenuItem value="planets">Planets</MenuItem>
+          </Select>
+        </FormControl>
 
-          <span> for </span>
+        <span> for </span>
 
-          <TextField
-            id="swapi-search"
-            label="Search Term"
-            value={this.state.search}
-            onChange={this.handleSearchChange}
-            margin="normal"
-          />
-        </form>
+        <TextField
+          id="swapi-search"
+          label="Search Term"
+          value={this.state.search}
+          onChange={this.handleSearchChange}
+          margin="normal"
+        />
+      </form>
     );
   }
 }
