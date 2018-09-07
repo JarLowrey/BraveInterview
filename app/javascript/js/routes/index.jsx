@@ -30,8 +30,6 @@ export default class Index extends Component {
   handleSearchFormSubmit(event) {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log(event); 
   }
 
   render() {

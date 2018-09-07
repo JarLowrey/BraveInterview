@@ -1,4 +1,4 @@
 class Person < ApplicationRecord
-    enum gender: [:unknown, :Female, :Male, :NA]
-    has_many :films, through: :film_character, dependent: :destroy
+    has_many :film_characters
+    has_many :films, through: :film_characters, dependent: :destroy
 end
