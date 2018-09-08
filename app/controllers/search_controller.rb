@@ -10,7 +10,7 @@ class SearchController < ApplicationController
         if is_cached_type?(type)
             if is_id_lookup
                 model = if type =='people' then Person else Film end
-                record = model.find_by swapi_id: search_term
+                record = model.find_by url: search_term
             else
                 if type == 'people'
                     record = Person.find_by name: search_term
@@ -48,15 +48,22 @@ class SearchController < ApplicationController
         return (type == 'people' || type == 'films')
     end
 
-    def save_swapi_api_result(type, obj)
+    def save_swapi_api_result(type, resp)
         if not is_cached_type?(type)
             return
         end
         
-        if type == 'people'
-            save_person(obj)
-        elsif type == 'films'
-            save_film(obj)
+        if is_cached_type?(type)
+            model = nil
+            if type == 'people'
+                resp['films'] = find_and_create_from_urls(Film, resp['films'])
+                model = Person
+            elsif type == 'films'
+                resp['people'] = find_and_create_from_urls(Person, resp['characters'])
+                resp.delete('characters')
+                model = Film
+            end
+            create_or_update_cached_record(model, resp)
         end
     end
 
@@ -66,14 +73,25 @@ class SearchController < ApplicationController
         return Integer(id)
     end
 
-    def save_person(resp)
-        puts JSON.pretty_generate(resp)
-
-        person = Person.new(resp)
-        debugger
-        person.save
+    def find_and_create_from_urls(model, urls)
+        existing_records =  model.where(url: urls)
+        records = existing_records.to_a
+        records_to_make = urls - existing_records.pluck(:url)
+        records_to_make.each do |url|
+            this_record = model.new url: url
+            this_record.save
+            records.append(this_record)
+        end
+        return records
     end
 
-    def save_film(swapi_response)
+    def create_or_update_cached_record(model, record_values)
+        record = model.find_by url: record_values['url']
+        if record != nil
+            record.update(record_values)
+        else
+            record = model.new(record_values)
+        end
+        record.save
     end
 end

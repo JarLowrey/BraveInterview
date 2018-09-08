@@ -17,7 +17,7 @@ class CreateFilms < ActiveRecord::Migration[5.2]
       t.string :vehicles
       t.string :planets
 
-      t.string :url
+      t.string :url, null: false, index: true
       t.string :created
       t.string :edited
 

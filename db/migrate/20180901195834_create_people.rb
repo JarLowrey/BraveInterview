@@ -2,7 +2,6 @@ class CreatePeople < ActiveRecord::Migration[5.2]
   def change
     create_table :people do |t|
       t.string :name, index: true #is a search field
-      t.integer :swapi_id, index: true
 
       t.string :birth_year
       t.string :eye_color
@@ -18,7 +17,7 @@ class CreatePeople < ActiveRecord::Migration[5.2]
       t.string :starships
       t.string :vehicles
 
-      t.string :url
+      t.string :url, null: false, index: true
       t.string :created
       t.string :edited
       
