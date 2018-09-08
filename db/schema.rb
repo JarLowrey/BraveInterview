@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 2018_09_01_213147) do
 
   create_table "films", force: :cascade do |t|
     t.string "title"
-    t.integer "swapi_id"
     t.integer "episode_id"
     t.string "opening_crawl"
     t.string "director"
@@ -41,7 +40,6 @@ ActiveRecord::Schema.define(version: 2018_09_01_213147) do
     t.string "edited"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["swapi_id"], name: "index_films_on_swapi_id"
     t.index ["title"], name: "index_films_on_title"
     t.index ["url"], name: "index_films_on_url"
   end
