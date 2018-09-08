@@ -4,35 +4,37 @@ class SearchController < ApplicationController
         search_term = params[:search_term]
         is_id_lookup = is_integer?(search_term)
 
-        record = nil
+        records = nil
         status = :ok
 
         if is_cached_type?(type)
             if is_id_lookup
                 model = if type =='people' then Person else Film end
-                record = model.find_by url: search_term
+                records = model.find_by url: search_term
             else
                 if type == 'people'
-                    record = Person.find_by name: search_term
+                    records = Person.where(name: search_term).to_a
                 elsif type == 'films'
-                    record = Film.find_by title: search_term
+                    records = Film.where(title: search_term).to_a
                 end
             end
         end
         
-        if record == nil || record.blank?
+        if records == nil || records.blank?
             search_at_end_of_url = if is_id_lookup then search_term else '?search='+search_term end
             url = 'http://swapi.co/api/' + type +'/'+ search_at_end_of_url
             swapi_response = HTTParty.get(url)
             status = swapi_response.code
             if status == 200
-                record = JSON.parse( swapi_response.body )
-                record = if record.fetch('count',0) > 0 then record['results'][0] else record end
-                save_swapi_api_result(type, record)
+                records = JSON.parse( swapi_response.body )
+                records = if records.key?('results') then records['results'] else [records] end
+                records.each do |r|
+                    save_swapi_api_result(type, r)
+                end
             end
         end
 
-        render json: record, status: status
+        render json: records, status: status
     end
 
     private
