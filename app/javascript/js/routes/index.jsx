@@ -1,69 +1,32 @@
 import React, { Component } from "react";
 
-import TextField from '@material-ui/core/TextField';
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import SearchForm from '../components/searchForm';
 
 export default class Index extends Component {
   constructor(props) {
     super(props);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
     this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
 
     this.state = {
-      search: "Luke Sywalker",
-      type: "people"
+
     }
   }
 
-  handleSearchChange(event) {
-    this.setState({ search: event.target.value });
-  }
-  handleTypeChange(event) {
-    this.setState({ type: event.target.value });
-  }
-  handleSearchFormSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  async handleSearchFormSubmit(type, searchTerm) {
+    const searchURL = '/search/'+type+'/'+searchTerm;
+    console.log(searchURL)
+    let response = await fetch(searchURL);
+    let searchData = await response.json();
+    console.log(searchData)
   }
 
   render() {
     return (
-      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit}>
-        <span>Search </span>
-        <FormControl
-          style={{ verticalAlign: 'bottom' }}
-          margin="normal">
-          <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
-          <Select
-            value={this.state.type}
-            style={{ minWidth: '150px' }}
-            onChange={this.handleTypeChange}
-            input={<Input name="resource-search-type" id="resource-search-type--id" />}
-          >
-            <MenuItem value="people">People</MenuItem>
-            <MenuItem value="films">Films</MenuItem>
-            <MenuItem value="starships">Starships</MenuItem>
-            <MenuItem value="species">Species</MenuItem>
-            <MenuItem value="planets">Planets</MenuItem>
-          </Select>
-        </FormControl>
-
-        <span> for </span>
-
-        <TextField
-          id="swapi-search"
-          label="Search Term"
-          value={this.state.search}
-          onChange={this.handleSearchChange}
-          margin="normal"
+      <div>
+        <SearchForm
+          handleSearchFormSubmit={this.handleSearchFormSubmit}
         />
-      </form>
+      </div>
     );
   }
 }
