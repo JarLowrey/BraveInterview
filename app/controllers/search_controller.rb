@@ -34,6 +34,14 @@ class SearchController < ApplicationController
             end
         end
 
+        if is_cached_type?(type)
+            #dont return the fully created linked objects, only the urls as shown in swapi
+            key = if type == 'people' then 'films' else 'people' end
+            records.each do |r|
+                r[key] = filter_to_only_url(r[key])
+            end
+        end                
+
         render json: records, status: status
     end
 
@@ -65,8 +73,17 @@ class SearchController < ApplicationController
                 resp.delete('characters')
                 model = Film
             end
+
             create_or_update_cached_record(model, resp)
         end
+    end
+
+    def filter_to_only_url(objects)
+        urls = []
+        objects.each do |obj|
+            urls.append(obj['url'])
+        end
+        return urls
     end
 
     def parse_swapi_id(swapi_url)
