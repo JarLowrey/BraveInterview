@@ -34,13 +34,24 @@ class SearchController < ApplicationController
             end
         end
 
-        if is_cached_type?(type)
-            #dont return the fully created linked objects, only the urls as shown in swapi
-            key = if type == 'people' then 'films' else 'people' end
-            records.each do |r|
-                r[key] = filter_to_only_url(r[key])
+        records.each_with_index do |r, index|
+            #filter out data from linked models, only need url
+            linked_records = {'films': nil, 'people': nil}
+            linked_records.each do |key, value|
+                if r.try(key) != nil
+                    linked_records[key] = r.try(key).pluck('url')
+                end
             end
-        end                
+
+            #add the urls back to our response
+            r = r.as_json
+            linked_records.each do |key, value|
+                if value
+                    r[key.to_s] = value
+                end
+            end
+            records[index] = r
+        end   
 
         render json: records, status: status
     end

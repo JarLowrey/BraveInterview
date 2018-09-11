@@ -7,31 +7,19 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 
 export default class SearchForm extends Component {
   constructor(props) {
     super(props);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
     this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
-
-    this.state = {
-      search: "Luke Skywalker",
-      type: "people"
-    }
   }
 
-  handleSearchChange(event) {
-    this.setState({ search: event.target.value });
-  }
-  handleTypeChange(event) {
-    this.setState({ type: event.target.value });
-  }
   handleSearchFormSubmit(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    this.props.handleSearchFormSubmit(this.state.type, this.state.search);
+    this.props.handleSearchFormSubmit();
   }
 
   render() {
@@ -43,9 +31,9 @@ export default class SearchForm extends Component {
           margin="normal">
           <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
           <Select
-            value={this.state.type}
+            value={this.props.resource}
             style={{ minWidth: '150px' }}
-            onChange={this.handleTypeChange}
+            onChange={this.props.handleResourceChange}
             input={<Input name="resource-search-type" id="resource-search-type--id" />}
           >
             <MenuItem value="people">People</MenuItem>
@@ -59,12 +47,17 @@ export default class SearchForm extends Component {
         <span> for </span>
 
         <TextField
+          autoFocus
           id="swapi-search"
           label="Search Term"
-          value={this.state.search}
-          onChange={this.handleSearchChange}
+          value={this.props.searchTerm}
+          onChange={this.props.handleSearchChange}
           margin="normal"
         />
+
+        <Button color="primary" variant="contained" onClick={this.handleSearchFormSubmit}>
+          submit
+        </Button>
       </form>
     );
   }
