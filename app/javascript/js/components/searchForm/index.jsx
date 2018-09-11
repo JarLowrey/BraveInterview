@@ -39,6 +39,7 @@ export default class SearchForm extends Component {
             <MenuItem value="people">People</MenuItem>
             <MenuItem value="films">Films</MenuItem>
             <MenuItem value="starships">Starships</MenuItem>
+            <MenuItem value="vehicles">Vehicles</MenuItem>
             <MenuItem value="species">Species</MenuItem>
             <MenuItem value="planets">Planets</MenuItem>
           </Select>
@@ -49,7 +50,7 @@ export default class SearchForm extends Component {
         <TextField
           autoFocus
           id="swapi-search"
-          label="Search Term"
+          label="ID or Search Term"
           value={this.props.searchTerm}
           onChange={this.props.handleSearchChange}
           margin="normal"

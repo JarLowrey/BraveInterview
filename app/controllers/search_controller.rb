@@ -5,7 +5,6 @@ class SearchController < ApplicationController
         is_id_lookup = is_integer?(search_term)
 
         records = nil
-        status = :ok
 
         if is_cached_type?(type)
             if is_id_lookup
@@ -34,26 +33,28 @@ class SearchController < ApplicationController
             end
         end
 
-        records.each_with_index do |r, index|
-            #filter out data from linked models, only need url
-            linked_records = {'films': nil, 'people': nil}
-            linked_records.each do |key, value|
-                if r.try(key) != nil
-                    linked_records[key] = r.try(key).pluck('url')
+        if records != nil
+            records.each_with_index do |r, index|
+                #filter out data from linked models, only need url
+                linked_records = {'films': nil, 'people': nil}
+                linked_records.each do |key, value|
+                    if r.try(key) != nil
+                        linked_records[key] = r.try(key).pluck('url')
+                    end
                 end
-            end
 
-            #add the urls back to our response
-            r = r.as_json
-            linked_records.each do |key, value|
-                if value
-                    r[key.to_s] = value
+                #add the urls back to our response
+                r = r.as_json
+                linked_records.each do |key, value|
+                    if value
+                        r[key.to_s] = value
+                    end
                 end
-            end
-            records[index] = r
-        end   
+                records[index] = r
+            end   
+        end
 
-        render json: records, status: status
+        render json: records, status: :ok
     end
 
     private

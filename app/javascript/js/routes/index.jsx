@@ -10,6 +10,8 @@ export default class Index extends Component {
     this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
+    this.runDefaultSearchFromUrl = this.runDefaultSearchFromUrl.bind(this);
+    this.setUrlFromState = this.setUrlFromState.bind(this);
 
     this.state = {
       swapiObjects: [],
@@ -18,6 +20,34 @@ export default class Index extends Component {
       isLoading: false
     }
   }
+
+  componentDidMount(){
+    this.runDefaultSearchFromUrl();
+  }
+
+  async runDefaultSearchFromUrl() {
+    let url = new URL(document.location.href);
+    const resource = url.searchParams.get('resource');
+    const searchTerm = url.searchParams.get('search');
+
+    // set state using the URL search terms, then run a search
+    if (resource && searchTerm) {
+      const resourceStateChange = this.setState({ resource: resource });
+      const searchStateChange = this.setState({ searchTerm: searchTerm });
+      await Promise.all([resourceStateChange, searchStateChange]);
+
+      this.handleSearchFormSubmit();
+    }
+  }
+
+  //make shareable - modify URL
+  setUrlFromState() {
+    let url = new URL(document.location.href);
+    url.searchParams.set('resource', this.state.resource);
+    url.searchParams.set('search', this.state.searchTerm);
+    this.props.history.push(url.search);
+  }
+
   handleSearchChange(event) {
     this.setState({ searchTerm: event.target.value });
   }
@@ -25,9 +55,9 @@ export default class Index extends Component {
     this.setState({ resource: event.target.value });
   }
 
-
   async handleSearchFormSubmit() {
     this.setState({ isLoading: true });
+    this.setUrlFromState();
 
     const searchURL = '/search/' + this.state.resource + '/' + this.state.searchTerm;
     let response = await fetch(searchURL);
