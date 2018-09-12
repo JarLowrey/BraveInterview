@@ -30,7 +30,7 @@ export default class SearchResult extends Component {
                 for (let i = 0; i < value.length; i++) {
                     value[i] = (<SwapiLink key={value[i]} getUrlSearchParams={this.props.getUrlSearchParams} url={value[i]} />);
                 }
-            } else if (key === 'url') {
+            } else if (typeof value === 'string' && value.includes('swapi.co')) {
                 value = (<SwapiLink getUrlSearchParams={this.props.getUrlSearchParams} url={value} />);
             } else {
                 value = (<span>{value}</span>);

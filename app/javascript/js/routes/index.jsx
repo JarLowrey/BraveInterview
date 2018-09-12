@@ -95,7 +95,7 @@ export default class Index extends Component {
           />
         );
       }, []);
-    } else {
+    } else if (this.state.hasSearched){
       content = 'Search returned no results';
     }
 

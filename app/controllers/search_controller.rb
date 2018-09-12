@@ -51,9 +51,14 @@ class SearchController < ApplicationController
                         r[key.to_s] = value
                     end
                 end
+
+                # remove the internal database id from the response
+                r.delete('id')
+
                 records[index] = r
             end   
         end
+
 
         render json: records, status: :ok
     end
