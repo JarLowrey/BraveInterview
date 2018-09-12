@@ -85,9 +85,8 @@ export default class Index extends Component {
           <CircularProgress size={50} />
         </div>
       );
-    } else if (this.state.searchResults) {
+    } else if (this.state.searchResults && this.state.searchResults.length > 0) {
       content = this.state.searchResults.map((searchResult) => {
-        console.log(searchResult)
         return (
           <SearchResult
             key={searchResult.url}
@@ -100,27 +99,8 @@ export default class Index extends Component {
       content = 'Search returned no results';
     }
 
-    //set the position of the search bar
-    // let formWrapperStyle = {
-    //   width: '500px',
-    //   position: 'absolute',
-    //   left: '50%',
-    //   top: '0px',
-    //   transform: 'translate(-50%,0)'
-    // };
-    // if (!this.state.hasSearched) {
-    //   let addedStyle = {
-    //     top: '311px',
-    //     transform: 'translate(-50%, -50%)'
-    //   };
-    //   formWrapperStyle = Object.assign({}, formWrapperStyle, addedStyle);
-    // }
-
     return (
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-        <div
-        // style={formWrapperStyle}
-        >
           <SearchForm
             disabled={this.state.isLoading}
             handleSearchChange={this.handleSearchChange}
@@ -129,7 +109,6 @@ export default class Index extends Component {
             searchTerm={this.state.searchTerm}
             handleSearchFormSubmit={this.performSearch}
           />
-        </div>
         {content}
       </div>
     );

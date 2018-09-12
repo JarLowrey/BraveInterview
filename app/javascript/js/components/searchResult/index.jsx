@@ -1,16 +1,8 @@
 import React, { Component } from "react";
 
-import Button from '@material-ui/core/Button';
+import SwapiLink from './swapiLink';
 
 export default class SearchResult extends Component {
-    static getResourceFromSwapiUrl(url) {
-        const urlSegments = url.split('/');
-        return urlSegments[urlSegments.length - 3];
-    }
-    static getIdFromSwapiUrl(url) {
-        const urlSegments = url.split('/');
-        return urlSegments[urlSegments.length - 2];
-    }
     static processKeyString(key) {
         key = key.replace("_", " ");
         key = key.split(' ') //To title case
@@ -36,24 +28,12 @@ export default class SearchResult extends Component {
             if (Array.isArray(value)) {
                 value = value.slice(); //copy the array from props so you can write to it
                 for (let i = 0; i < value.length; i++) {
-                    const url = value[i];
-                    const id = SearchResult.getIdFromSwapiUrl(url);
-                    const resource = SearchResult.getResourceFromSwapiUrl(url);
-
-                    value[i] = (
-                        <Button
-                            style={{ margin: '3px' }}
-                            color="primary"
-                            variant="contained"
-                            key={value[i]}
-                            href={'/' + this.props.getUrlSearchParams(resource, id)}
-                        >
-                            {`${resource}-${id}`}
-                        </Button>
-                    );
+                    value[i] = (<SwapiLink key={value[i]} getUrlSearchParams={this.props.getUrlSearchParams} url={value[i]} />);
                 }
+            } else if (key === 'url') {
+                value = (<SwapiLink getUrlSearchParams={this.props.getUrlSearchParams} url={value} />);
             } else {
-                value = <span>{value}</span>
+                value = (<span>{value}</span>);
             }
 
             return (
@@ -65,7 +45,7 @@ export default class SearchResult extends Component {
         }, []);
 
         return (
-            <div style={{margin: '0 auto', width: '80%'}}>
+            <div style={{ margin: '0 auto', width: '80%' }}>
                 {content}
             </div>
         );
