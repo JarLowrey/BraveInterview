@@ -10,7 +10,7 @@ export default class Index extends Component {
     this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
-    this.runDefaultSearchFromUrl = this.runDefaultSearchFromUrl.bind(this);
+    this.setStateFromUrlAndRunSearch = this.setStateFromUrlAndRunSearch.bind(this);
     this.setUrlFromState = this.setUrlFromState.bind(this);
 
     this.state = {
@@ -22,15 +22,15 @@ export default class Index extends Component {
   }
 
   componentDidMount(){
-    this.runDefaultSearchFromUrl();
+    this.setStateFromUrlAndRunSearch();
   }
 
-  async runDefaultSearchFromUrl() {
+  async setStateFromUrlAndRunSearch() {
     let url = new URL(document.location.href);
     const resource = url.searchParams.get('resource');
     const searchTerm = url.searchParams.get('search');
 
-    // set state using the URL search terms, then run a search
+    // set state using the URL search terms, then run a search  
     if (resource && searchTerm) {
       const resourceStateChange = this.setState({ resource: resource });
       const searchStateChange = this.setState({ searchTerm: searchTerm });

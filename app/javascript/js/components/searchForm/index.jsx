@@ -24,15 +24,24 @@ export default class SearchForm extends Component {
 
   render() {
     return (
-      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit}>
-        <span>Search </span>
+      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit} style={{ display: 'flex', maxWidth: '80%', margin: '0 auto' }}>
+        <TextField
+          autoFocus
+          id="swapi-search"
+          label="ID or Search Term"
+          fullWidth
+          style={{ flexGrow: 1000 }}
+          value={this.props.searchTerm}
+          onChange={this.props.handleSearchChange}
+          margin="normal"
+        />
+
         <FormControl
-          style={{ verticalAlign: 'bottom' }}
+          style={{ verticalAlign: 'bottom', marginRight: '15px', minWidth: '150px', flexGrow: 0 }}
           margin="normal">
           <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
           <Select
             value={this.props.resource}
-            style={{ minWidth: '150px' }}
             onChange={this.props.handleResourceChange}
             input={<Input name="resource-search-type" id="resource-search-type--id" />}
           >
@@ -45,20 +54,16 @@ export default class SearchForm extends Component {
           </Select>
         </FormControl>
 
-        <span> for </span>
-
-        <TextField
-          autoFocus
-          id="swapi-search"
-          label="ID or Search Term"
-          value={this.props.searchTerm}
-          onChange={this.props.handleSearchChange}
-          margin="normal"
-        />
-
-        <Button color="primary" variant="contained" onClick={this.handleSearchFormSubmit}>
-          submit
-        </Button>
+        <div style={{ flexGrow: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', height: '100%'}}>
+            <Button
+              style={{ }}
+              // style={{ position: 'absolute', bottom: '50%', left: '50%', transform: 'translate(0%, 0%)' }}
+              color="primary" variant="contained" onClick={this.handleSearchFormSubmit}>
+              submit
+          </Button>
+          </div>
+        </div>
       </form>
     );
   }
