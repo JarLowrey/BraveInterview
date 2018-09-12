@@ -1,5 +1,9 @@
 # README
 
+This app fetches, caches, and displays data from the [SWAPI API](https://swapi.co/) using Rails 5.2.1 and Webpacker 3.5.5.
+
+See it here: https://brave-interview-swapi-api.herokuapp.com/
+
 ## Build
 
 To run on your local machine, first setup [Postgres](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04). Then download the code and run `bundle install`. Create your database:
@@ -12,9 +16,6 @@ rake run db:migrate
 Finally, run the rails server with `rails s` and Webpack server with `./bin/webpack-dev-server` simultaneously in two seperate terminals.
 
 ### Quick Explanation
-
-This app fetches, caches, and displays data from the [SWAPI API](https://swapi.co/) using Rails 5.2.1 and Webpacker 3.5.5.
-
 
 #### Server
 
