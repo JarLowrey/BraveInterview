@@ -1,27 +1,36 @@
 import React, { Component } from "react";
 
-import SearchForm from '../components/searchForm';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import SearchForm from '../components/searchForm';
+import SearchResult from '../components/searchResult';
+
 export default class Index extends Component {
+  state = {
+    searchResults: [],
+    resource: 'people',
+    searchTerm: 'Luke Skywalker',
+    hasSearched: false,
+    isLoading: false
+  }
+
   constructor(props) {
     super(props);
-    this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this);
+    this.performSearch = this.performSearch.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
     this.setStateFromUrlAndRunSearch = this.setStateFromUrlAndRunSearch.bind(this);
-    this.setUrlFromState = this.setUrlFromState.bind(this);
-
-    this.state = {
-      swapiObjects: [],
-      resource: 'people',
-      searchTerm: 'Luke Skywalker',
-      isLoading: false
-    }
+    this.setSearchUrl = this.setSearchUrl.bind(this);
   }
 
-  componentDidMount(){
+  static getUrlSearchParams(resource, searchTerm) {
+    let url = new URL(document.location.href);
+    url.searchParams.set('resource', resource);
+    url.searchParams.set('search', searchTerm);
+    return url.search;
+  }
+
+  componentDidMount() {
     this.setStateFromUrlAndRunSearch();
   }
 
@@ -32,20 +41,16 @@ export default class Index extends Component {
 
     // set state using the URL search terms, then run a search  
     if (resource && searchTerm) {
-      const resourceStateChange = this.setState({ resource: resource });
-      const searchStateChange = this.setState({ searchTerm: searchTerm });
-      await Promise.all([resourceStateChange, searchStateChange]);
+      this.setState({ resource: resource });
+      this.setState({ searchTerm: searchTerm });
 
-      this.handleSearchFormSubmit();
+      this.performSearch(resource, searchTerm);
     }
   }
 
   //make shareable - modify URL
-  setUrlFromState() {
-    let url = new URL(document.location.href);
-    url.searchParams.set('resource', this.state.resource);
-    url.searchParams.set('search', this.state.searchTerm);
-    this.props.history.push(url.search);
+  setSearchUrl(resource = this.state.resource, searchTerm = this.state.searchTerm) {
+    this.props.history.push(Index.getUrlSearchParams(resource, searchTerm));
   }
 
   handleSearchChange(event) {
@@ -55,39 +60,77 @@ export default class Index extends Component {
     this.setState({ resource: event.target.value });
   }
 
-  async handleSearchFormSubmit() {
-    this.setState({ isLoading: true });
-    this.setUrlFromState();
+  async performSearch(resource = this.state.resource, searchTerm = this.state.searchTerm) {
+    this.setSearchUrl(resource, searchTerm);
 
-    const searchURL = '/search/' + this.state.resource + '/' + this.state.searchTerm;
+    this.setState({ hasSearched: true, isLoading: true });
+
+    const searchURL = '/search/' + resource + '/' + searchTerm;
     let response = await fetch(searchURL);
     let searchData = await response.json();
     console.log(searchData);
 
-    this.setState({ isLoading: false });
-    this.setState({ swapiObjects: searchData })
+    this.setState({ searchResults: searchData, isLoading: false })
   }
 
   render() {
+    let content = null;
+
     if (this.state.isLoading) {
-      return (<
-        div style={{
-          position: 'absolute', left: '50%', top: '50%',
-          transform: 'translate(-50%, -50%)'
+      content = (
+        <div style={{
+          position: 'absolute', left: '50%', top: '0',
+          transform: 'translate(-50%, 50%)'
         }}>
-        <CircularProgress size={50} />
-      </div>);
+          <CircularProgress size={50} />
+        </div>
+      );
+    } else if (this.state.searchResults) {
+      content = this.state.searchResults.map((searchResult) => {
+        console.log(searchResult)
+        return (
+          <SearchResult
+            key={searchResult.url}
+            getUrlSearchParams={Index.getUrlSearchParams}
+            resultObject={searchResult}
+          />
+        );
+      }, []);
+    } else {
+      content = 'Search returned no results';
     }
 
+    //set the position of the search bar
+    // let formWrapperStyle = {
+    //   width: '500px',
+    //   position: 'absolute',
+    //   left: '50%',
+    //   top: '0px',
+    //   transform: 'translate(-50%,0)'
+    // };
+    // if (!this.state.hasSearched) {
+    //   let addedStyle = {
+    //     top: '311px',
+    //     transform: 'translate(-50%, -50%)'
+    //   };
+    //   formWrapperStyle = Object.assign({}, formWrapperStyle, addedStyle);
+    // }
+
     return (
-      <div style={{ position: 'relative' }}>
-        <SearchForm
-          handleSearchChange={this.handleSearchChange}
-          handleResourceChange={this.handleResourceChange}
-          resource={this.state.resource}
-          searchTerm={this.state.searchTerm}
-          handleSearchFormSubmit={this.handleSearchFormSubmit}
-        />
+      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+        <div
+        // style={formWrapperStyle}
+        >
+          <SearchForm
+            disabled={this.state.isLoading}
+            handleSearchChange={this.handleSearchChange}
+            handleResourceChange={this.handleResourceChange}
+            resource={this.state.resource}
+            searchTerm={this.state.searchTerm}
+            handleSearchFormSubmit={this.performSearch}
+          />
+        </div>
+        {content}
       </div>
     );
   }

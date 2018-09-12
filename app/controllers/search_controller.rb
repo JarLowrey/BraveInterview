@@ -27,12 +27,13 @@ class SearchController < ApplicationController
             if status == 200
                 records = JSON.parse( swapi_response.body )
                 records = if records.key?('results') then records['results'] else [records] end
-                records.each do |r|
-                    save_swapi_api_result(type, r)
+                records.each_with_index do |r,index|
+                    records[index] = save_swapi_api_result(type, r)
                 end
             end
         end
 
+        #remove all data from the linked models except their url
         if records != nil
             records.each_with_index do |r, index|
                 #filter out data from linked models, only need url
@@ -71,10 +72,8 @@ class SearchController < ApplicationController
     end
 
     def save_swapi_api_result(type, resp)
-        if not is_cached_type?(type)
-            return
-        end
-        
+        r = resp
+
         if is_cached_type?(type)
             model = nil
             if type == 'people'
@@ -86,8 +85,10 @@ class SearchController < ApplicationController
                 model = Film
             end
 
-            create_or_update_cached_record(model, resp)
+            r = create_or_update_cached_record(model, resp)
         end
+        
+        return r
     end
 
     def filter_to_only_url(objects)
@@ -124,5 +125,6 @@ class SearchController < ApplicationController
             record = model.new(record_values)
         end
         record.save
+        return record
     end
 end

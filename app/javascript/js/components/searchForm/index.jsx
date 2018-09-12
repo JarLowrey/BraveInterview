@@ -24,8 +24,9 @@ export default class SearchForm extends Component {
 
   render() {
     return (
-      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit} style={{ display: 'flex', maxWidth: '80%', margin: '0 auto' }}>
+      <form noValidate autoComplete="off" onSubmit={this.handleSearchFormSubmit} style={{ display: 'flex', }}>
         <TextField
+          disabled={this.props.disabled}
           autoFocus
           id="swapi-search"
           label="ID or Search Term"
@@ -37,6 +38,7 @@ export default class SearchForm extends Component {
         />
 
         <FormControl
+          disabled={this.props.disabled}
           style={{ verticalAlign: 'bottom', marginRight: '15px', minWidth: '150px', flexGrow: 0 }}
           margin="normal">
           <InputLabel htmlFor="resource-search-type--id">Resource</InputLabel>
@@ -55,10 +57,9 @@ export default class SearchForm extends Component {
         </FormControl>
 
         <div style={{ flexGrow: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', height: '100%'}}>
+          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Button
-              style={{ }}
-              // style={{ position: 'absolute', bottom: '50%', left: '50%', transform: 'translate(0%, 0%)' }}
+              disabled={this.props.disabled}
               color="primary" variant="contained" onClick={this.handleSearchFormSubmit}>
               submit
           </Button>
