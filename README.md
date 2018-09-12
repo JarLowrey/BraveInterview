@@ -13,7 +13,8 @@ rake run db:create
 rake run db:migrate
 ```
 
-Finally, run the rails server with `rails s` and Webpack server with `./bin/webpack-dev-server` simultaneously in two seperate terminals.
+Finally, run the rails server with `rails s` and Webpack server with `./bin/webpack-dev-server` simultaneously in two seperate terminals. 
+The website will be live on `http://localhost:3000`.
 
 ### Quick Explanation
 
