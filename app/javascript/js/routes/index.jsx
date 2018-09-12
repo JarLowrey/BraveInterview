@@ -19,38 +19,28 @@ export default class Index extends Component {
     this.performSearch = this.performSearch.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
-    this.setStateFromUrlAndRunSearch = this.setStateFromUrlAndRunSearch.bind(this);
-    this.setSearchUrl = this.setSearchUrl.bind(this);
+    this.checkUrlAndSearchIfNeeded = this.checkUrlAndSearchIfNeeded.bind(this);
   }
 
   static getUrlSearchParams(resource, searchTerm) {
-    let url = new URL(document.location.href);
-    url.searchParams.set('resource', resource);
-    url.searchParams.set('search', searchTerm);
-    return url.search;
+    let search = new URLSearchParams();
+    search.set('resource', resource);
+    search.set('search', searchTerm);
+    return search.toString();
   }
 
-  componentDidMount() {
-    this.setStateFromUrlAndRunSearch();
+  componentDidMount(){
+    //search on initial load
+    this.checkUrlAndSearchIfNeeded();
   }
 
-  async setStateFromUrlAndRunSearch() {
-    let url = new URL(document.location.href);
-    const resource = url.searchParams.get('resource');
-    const searchTerm = url.searchParams.get('search');
-
-    // set state using the URL search terms, then run a search  
-    if (resource && searchTerm) {
-      this.setState({ resource: resource });
-      this.setState({ searchTerm: searchTerm });
-
-      this.performSearch(resource, searchTerm);
+  checkUrlAndSearchIfNeeded(search = this.props.location.search){
+    search = new URLSearchParams(search);
+    const r = search.get('resource');
+    const s = search.get('search');
+    if (r && s) {
+      this.performSearch(r, s);
     }
-  }
-
-  //make shareable - modify URL
-  setSearchUrl(resource = this.state.resource, searchTerm = this.state.searchTerm) {
-    this.props.history.push(Index.getUrlSearchParams(resource, searchTerm));
   }
 
   handleSearchChange(event) {
@@ -60,17 +50,25 @@ export default class Index extends Component {
     this.setState({ resource: event.target.value });
   }
 
-  async performSearch(resource = this.state.resource, searchTerm = this.state.searchTerm) {
-    this.setSearchUrl(resource, searchTerm);
+  async performSearch(resource = this.state.resource, searchTerm = this.state.searchTerm, updateUrl = true) {
+    //make shareable - modify URL
+    const urlParams = new URLSearchParams(this.props.location.search);
+    if (updateUrl && urlParams.get('resource') !== resource || urlParams.get('search') !== searchTerm) {
+      this.props.history.push('?'+Index.getUrlSearchParams(resource, searchTerm)); 
+    }
 
-    this.setState({ hasSearched: true, isLoading: true });
+    this.setState({ searchResults: null, resource: resource, searchTerm: searchTerm, hasSearched: true, isLoading: true });
 
     const searchURL = '/search/' + resource + '/' + searchTerm;
     let response = await fetch(searchURL);
     let searchData = await response.json();
     console.log(searchData);
 
-    this.setState({ searchResults: searchData, isLoading: false })
+    this.setState({ searchResults: searchData, isLoading: false });
+  }
+
+  async doSearch(r,s){
+    
   }
 
   render() {
@@ -92,6 +90,7 @@ export default class Index extends Component {
             key={searchResult.url}
             getUrlSearchParams={Index.getUrlSearchParams}
             resultObject={searchResult}
+            search={this.performSearch}
           />
         );
       }, []);

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import SwapiLink from './swapiLink';
 
 export default class SearchResult extends Component {
+
     static processKeyString(key) {
         key = key.replace("_", " ");
         key = key.split(' ') //To title case
@@ -28,10 +29,10 @@ export default class SearchResult extends Component {
             if (Array.isArray(value)) {
                 value = value.slice(); //copy the array from props so you can write to it
                 for (let i = 0; i < value.length; i++) {
-                    value[i] = (<SwapiLink key={value[i]} getUrlSearchParams={this.props.getUrlSearchParams} url={value[i]} />);
+                    value[i] = (<SwapiLink performSearch={this.props.search} key={value[i]} getUrlSearchParams={this.props.getUrlSearchParams} url={value[i]} />);
                 }
             } else if (typeof value === 'string' && value.includes('swapi.co')) {
-                value = (<SwapiLink getUrlSearchParams={this.props.getUrlSearchParams} url={value} />);
+                value = (<SwapiLink performSearch={this.props.search} getUrlSearchParams={this.props.getUrlSearchParams} url={value} />);
             } else {
                 value = (<span>{value}</span>);
             }

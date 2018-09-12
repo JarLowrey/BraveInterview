@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
     def perform_search
-        type = params[:type]
+        type = params[:resource_type]
         search_term = params[:search_term]
         is_id_lookup = is_integer?(search_term)
 

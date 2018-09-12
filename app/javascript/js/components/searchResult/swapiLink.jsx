@@ -1,8 +1,20 @@
 import React, { Component } from "react";
 
 import Button from '@material-ui/core/Button';
+import { Link } from "react-router-dom";
 
 export default class SwapiLink extends Component {
+    constructor(props) {
+        super(props)
+        this.search = this.search.bind(this);
+    }
+
+    search(resource, id) {
+        return () => {
+            this.props.performSearch(resource, id);
+        }
+    }
+
     static getResourceFromSwapiUrl(url) {
         const urlSegments = url.split('/');
         return urlSegments[urlSegments.length - 3];
@@ -20,7 +32,9 @@ export default class SwapiLink extends Component {
                 style={{ margin: '3px' }}
                 color="primary"
                 variant="contained"
-                href={'/' + this.props.getUrlSearchParams(resource, id)}
+                component={Link}
+                to={'/?' + this.props.getUrlSearchParams(resource, id)}
+                onClick={this.search(resource, id)}
             >
                 {`${resource}-${id}`}
             </Button>
