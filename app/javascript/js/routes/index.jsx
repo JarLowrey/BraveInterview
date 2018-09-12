@@ -95,20 +95,20 @@ export default class Index extends Component {
           />
         );
       }, []);
-    } else if (this.state.hasSearched){
+    } else if (this.state.hasSearched) {
       content = 'Search returned no results';
     }
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-          <SearchForm
-            disabled={this.state.isLoading}
-            handleSearchChange={this.handleSearchChange}
-            handleResourceChange={this.handleResourceChange}
-            resource={this.state.resource}
-            searchTerm={this.state.searchTerm}
-            handleSearchFormSubmit={this.performSearch}
-          />
+      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <SearchForm
+          disabled={this.state.isLoading}
+          handleSearchChange={this.handleSearchChange}
+          handleResourceChange={this.handleResourceChange}
+          resource={this.state.resource}
+          searchTerm={this.state.searchTerm}
+          handleSearchFormSubmit={this.performSearch}
+        />
         {content}
       </div>
     );

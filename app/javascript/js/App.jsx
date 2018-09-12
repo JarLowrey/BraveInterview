@@ -10,11 +10,15 @@ import NotFoundPage from "./routes/notFoundPage";
 export default class App extends Component {
   render() {
     return (
-      <MuiThemeProvider theme={createMuiTheme()}>
+      <MuiThemeProvider theme={createMuiTheme({
+        typography: {
+          fontSize: 18,
+        },
+      })}>
         <Router>
           <Switch>
-          <Route exact path="/" component={Index} />
-          <Route component={NotFoundPage} />
+            <Route exact path="/" component={Index} />
+            <Route component={NotFoundPage} />
           </Switch>
         </Router>
       </MuiThemeProvider>
