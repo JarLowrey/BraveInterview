@@ -4,6 +4,8 @@ This app fetches, caches, and displays data from the [SWAPI API](https://swapi.c
 
 See it here: https://brave-interview-swapi-api.herokuapp.com/
 
+This was done as part of an interview at [Brave](https://brave.com/). A soft 1 week goal was given, with a hard deadline of 3 weeks. I completed it in my spare time in about 1.5-2 weeks.
+
 ## Build
 
 To run on your local machine, first setup [Postgres](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04). Then download the code and run `bundle install`. Create your database:
